@@ -1,0 +1,17 @@
+{
+  "name": "actual-telegram-bot",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@actual-app/api": "^26.2.0",
+    "dotenv": "^17.2.3",
+    "telegraf": "^4.16.3"
+  }
+}

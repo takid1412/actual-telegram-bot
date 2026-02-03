@@ -1,4 +1,4 @@
-## Actual Budget Telegram Bot
+## Actual Budget - Telegram Bot
 
 configure env file
 ```dotenv

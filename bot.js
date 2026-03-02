@@ -26,8 +26,9 @@ async function getPeriodStats(accountId, startDate, endDate) {
   let expense = 0;
 
   transactions.forEach(t => {
-    if (t.amount > 0) income += t.amount;
-    if (t.amount < 0) expense += t.amount;
+    const realAmount = api.utils.amountToInteger(t.amount);
+    if (realAmount > 0) income += realAmount;
+    if (realAmount < 0) expense += realAmount;
   });
 
   return {
@@ -105,7 +106,7 @@ bot.on(message('text'), async (ctx) => {
     const todayStr = getDateString(today);
     await api.importTransactions(process.env.ACTUAL_ACCOUNT_ID, [{
       date: todayStr,
-      amount: amount,
+      amount: api.utils.amountToInteger(amount),
       payee_name: "Actual Bot",
       notes: note,
       account: process.env.ACTUAL_ACCOUNT_ID,
@@ -123,9 +124,23 @@ bot.on(message('text'), async (ctx) => {
   }
 });
 
+const fixTrans = async()=>{
+  const transactions = await api.getTransactions(process.env.ACTUAL_ACCOUNT_ID, '2000-01-01', '2099-12-31');
+
+  for (const t of transactions) {
+    if (t.imported_payee === 'Actual Bot') {
+      await api.updateTransaction(t.id, { amount: t.amount * 100 });
+    }
+  }
+
+  await api.sync();
+  console.log('Transactions updated.');
+};
+
 (async () => {
   try {
     await initActual();
+    // await fixTrans();
     await bot.launch();
     console.log('Bot started.');
 

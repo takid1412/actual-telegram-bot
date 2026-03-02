@@ -104,12 +104,11 @@ bot.on(message('text'), async (ctx) => {
   try {
     const today = new Date();
     const todayStr = getDateString(today);
-    await api.importTransactions(process.env.ACTUAL_ACCOUNT_ID, [{
+    await api.addTransactions(process.env.ACTUAL_ACCOUNT_ID, [{
       date: todayStr,
       amount: api.utils.amountToInteger(amount),
       payee_name: "Actual Bot",
       notes: note,
-      account: process.env.ACTUAL_ACCOUNT_ID,
       cleared: true
     }]);
 

@@ -26,7 +26,7 @@ async function getPeriodStats(accountId, startDate, endDate) {
   let expense = 0;
 
   transactions.forEach(t => {
-    const realAmount = api.utils.amountToInteger(t.amount);
+    const realAmount = api.utils.integerToAmount(t.amount);
     if (realAmount > 0) income += realAmount;
     if (realAmount < 0) expense += realAmount;
   });
@@ -141,8 +141,9 @@ const fixTrans = async()=>{
   try {
     await initActual();
     // await fixTrans();
-    await bot.launch();
-    console.log('Bot started.');
+    console.log(await getBalanceMarkdown());
+    // await bot.launch();
+    // console.log('Bot started.');
 
     // Enable graceful stop
     process.once('SIGINT', () => { bot.stop('SIGINT'); api.shutdown(); });

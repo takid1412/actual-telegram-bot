@@ -140,9 +140,9 @@ const fixTrans = async()=>{
   try {
     await initActual();
     // await fixTrans();
-    console.log(await getBalanceMarkdown());
-    // await bot.launch();
-    // console.log('Bot started.');
+    // console.log(await getBalanceMarkdown());
+    await bot.launch();
+    console.log('Bot started.');
 
     // Enable graceful stop
     process.once('SIGINT', () => { bot.stop('SIGINT'); api.shutdown(); });

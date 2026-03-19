@@ -58,7 +58,7 @@ async function initActual() {
   console.log("Accounts: \n" + accounts.map(a => `${a.name}: \`${a.id}\``).join('\n') );
 }
 
-async function getBalanceMarkdown() {
+async function getBalanceMarkdown(includeDetail = false) {
   const today = new Date();
   const todayStr = getDateString(today);
 
@@ -70,11 +70,11 @@ async function getBalanceMarkdown() {
 
   return `*Week:* ${fmt(statsWeek['balance'])}\n` +
     `*Month:* ${fmt(statsMonth['balance'])}\n` +
-    `*Detail:* +${fmt(statsMonth['income'])} ${fmt(statsMonth['expense'])}\n`;
+    includeDetail?`*Detail:* +${fmt(statsMonth['income'])} ${fmt(statsMonth['expense'])}\n`:'';
 }
 
 bot.command(['balance', 'bl'], async (ctx) => {
-  const balance = await getBalanceMarkdown();
+  const balance = await getBalanceMarkdown(true);
   ctx.replyWithMarkdown(balance);
 });
 
@@ -82,7 +82,7 @@ bot.on(message('text'), async (ctx) => {
   const text = ctx.message.text.trim();
   const regex = /^(.*)\s+([+\-]?\d+(?:[.,]\d+)?[kKmM])/;
   const match = text.match(regex);
-  if(!match || text.startsWith("/")) return ctx.replyWithMarkdown('*Usage:* abc 123(k|m) or 123(k|m) xyz\n*Commands:* balance, bl');
+  if(!match || text.startsWith("/")) return ctx.replyWithMarkdown('*Invalid Format*\n*Usage:* note 123(k|m) or 123(k|m) note');
 
   let rawAmountStr = match[2].toLowerCase();
   let multiplier = 1e3;
@@ -123,9 +123,16 @@ bot.on(message('text'), async (ctx) => {
   }
 });
 
+async function setCommands(){
+  await bot.telegram.setMyCommands([
+    { command: 'balance', description: 'Get current month balance' },
+  ]);
+}
+
 (async () => {
   try {
     await initActual();
+    await setCommands();
     await bot.launch();
     console.log('Bot started.');
 

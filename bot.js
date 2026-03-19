@@ -71,7 +71,7 @@ async function getBalanceMarkdown(includeDetail = false) {
 
   return `*Week:* ${fmt(statsWeek['balance'])}\n` +
     `*Month:* ${fmt(statsMonth['balance'])}\n` +
-    includeDetail?`*Detail:* +${fmt(statsMonth['income'])} ${fmt(statsMonth['expense'])}\n`:'';
+    (includeDetail?`*Detail:* +${fmt(statsMonth['income'])} ${fmt(statsMonth['expense'])}\n`:'');
 }
 
 bot.command(['balance', 'bl'], async (ctx) => {
@@ -137,9 +137,13 @@ const fixTrans = async()=>{
 };
 
 async function setCommands(){
+  console.log(await bot.telegram.getMyCommands());
   await bot.telegram.setMyCommands([
     { command: 'balance', description: 'Get current month balance' },
   ]);
+  await bot.telegram.setChatMenuButton({
+    menu_button: { type: 'commands' }
+  });
 }
 
 (async () => {

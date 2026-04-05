@@ -10,7 +10,13 @@ const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN);
 
 const fmt = (amount) => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
 
-const getDateString = (date) => date.toISOString().split('T')[0];
+const getDateString = d => {
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+
+  return `${year}-${month}-${day}`;
+}
 
 function getMonday(d) {
   d = new Date(d);
@@ -68,6 +74,8 @@ async function getBalanceMarkdown(includeDetail = false) {
 
   const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
   const statsMonth = await getPeriodStats(process.env.ACTUAL_ACCOUNT_ID, getDateString(startOfMonth), todayStr);
+
+  console.log(getDateString(startOfWeek), getDateString(startOfMonth), todayStr);
 
   return `*Week:* ${fmt(statsWeek['balance'])}\n` +
     `*Month:* ${fmt(statsMonth['balance'])}\n` +
@@ -151,7 +159,7 @@ async function setCommands(){
     await initActual();
     await setCommands();
     // await fixTrans();
-    // console.log(await getBalanceMarkdown());
+    console.log(await getBalanceMarkdown());
     await bot.launch();
     console.log('Bot started.');
 

@@ -75,7 +75,7 @@ async function getBalanceMarkdown(includeDetail = false) {
   const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
   const statsMonth = await getPeriodStats(process.env.ACTUAL_ACCOUNT_ID, getDateString(startOfMonth), todayStr);
 
-  console.log(getDateString(startOfWeek), getDateString(startOfMonth), todayStr);
+  // console.log(getDateString(startOfWeek), getDateString(startOfMonth), todayStr);
 
   return `*Week:* ${fmt(statsWeek['balance'])}\n` +
     `*Month:* ${fmt(statsMonth['balance'])}\n` +
@@ -159,7 +159,7 @@ async function setCommands(){
     await initActual();
     await setCommands();
     // await fixTrans();
-    console.log(await getBalanceMarkdown());
+    // console.log(await getBalanceMarkdown());
     await bot.launch();
     console.log('Bot started.');
 
